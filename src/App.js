@@ -6,7 +6,9 @@ import ReportsPage from './pages/ReportsPage'
 import AssignmentsPage from './pages/AssignmentsPage'
 import AnalysisPage from './pages/AnalysisPage'
 import AdminLocations from './pages/AdminLocations'
+import Profile from './pages/Profile'
 import Sidebar from './components/Sidebar'
+import { isManagerRole } from './utils/managerAccess'
 import './App.css';
 
 const SESSION_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
@@ -50,7 +52,9 @@ function Dashboard() {
   // Auto log out after 5 minutes of no user activity.
   useIdleLogout(SESSION_TIMEOUT_MS);
 
-  const content = activePage === 'assignments'
+  const content = activePage === 'profile'
+    ? <Profile />
+    : activePage === 'assignments'
     ? <AssignmentsPage selectedCategory={selectedCategory} />
     : activePage === 'analysis'
     ? <AnalysisPage />
@@ -75,12 +79,64 @@ function Dashboard() {
   );
 }
 
+function ManagerRoute() {
+  const [checkingAccess, setCheckingAccess] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function verifyManagerAccess() {
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (cancelled) return;
+      if (authError || !user) {
+        await supabase.auth.signOut();
+        if (!cancelled) navigate("/", { replace: true });
+        return;
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (cancelled) return;
+
+      if (profileError) {
+        await supabase.auth.signOut();
+        navigate("/", { replace: true, state: { authError: "Unable to verify manager access. Please contact an administrator." } });
+        return;
+      }
+
+      if (!isManagerRole(profile?.role)) {
+        await supabase.auth.signOut();
+        navigate("/", { replace: true, state: { authError: "Only manager accounts can access this portal." } });
+        return;
+      }
+
+      setCheckingAccess(false);
+    }
+
+    verifyManagerAccess();
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate]);
+
+  if (checkingAccess) {
+    return <main aria-live="polite" style={{ padding: 32, textAlign: "center" }}>Verifying manager access...</main>;
+  }
+
+  return <Dashboard />;
+}
+
 function App() {
   return (
     <HashRouter>
       <Routes>
         <Route path="/" element={<AdminLogin />} />
-        <Route path="/dashboard/*" element={<Dashboard />} />
+        <Route path="/dashboard/*" element={<ManagerRoute />} />
         {/* Any unrecognized path (e.g. a stale/bad link) falls back to login
             instead of rendering a blank screen. */}
         <Route path="*" element={<Navigate to="/" replace />} />

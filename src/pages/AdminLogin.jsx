@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../components/supabaseClient";
+import { isManagerRole } from "../utils/managerAccess";
 import "./AdminLogin.css";
 
 const initialAdminState = {
@@ -15,9 +16,10 @@ const initialAdminErrors = {
 
 function AdminLogin() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState(initialAdminState);
   const [errors, setErrors] = useState(initialAdminErrors);
-  const [authError, setAuthError] = useState("");
+  const [authError, setAuthError] = useState(location.state?.authError || "");
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -25,7 +27,7 @@ function AdminLogin() {
     const nextErrors = {};
 
     if (!form.identifier.trim()) {
-      nextErrors.identifier = "Admin username or email is required.";
+      nextErrors.identifier = "Manager email is required.";
     }
 
     if (!form.password.trim()) {
@@ -50,10 +52,6 @@ function AdminLogin() {
 
     setSubmitting(true);
 
-    // Supabase auth requires an email — if you also want to support plain
-    // usernames, you'll need a server-side lookup (e.g. an RPC/edge function)
-    // to resolve username -> email first, since the client can't safely
-    // query auth.users directly.
     const { data, error } = await supabase.auth.signInWithPassword({
       email: form.identifier.trim(),
       password: form.password,
@@ -61,22 +59,28 @@ function AdminLogin() {
 
     if (error) {
       setSubmitting(false);
-      setAuthError("Invalid credentials. Please check your username/email and password.");
+      setAuthError("Invalid credentials. Please check your manager email and password.");
       return;
     }
 
-    // Only admins/moderators may use this portal — citizens signing in
-    // here get bounced back out even if their credentials are valid.
+    if (!data.user) {
+      setSubmitting(false);
+      setAuthError("Sign-in succeeded without a user session. Please try again.");
+      return;
+    }
+
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", data.user.id)
       .maybeSingle();
 
-    if (profileError || !profile || profile.role === "citizen") {
+    if (profileError || !isManagerRole(profile?.role)) {
       await supabase.auth.signOut();
       setSubmitting(false);
-      setAuthError("This account does not have admin access.");
+      setAuthError(profileError
+        ? "Unable to verify manager access. Please try again."
+        : "Only manager accounts can sign in to this portal.");
       return;
     }
 
@@ -107,17 +111,17 @@ function AdminLogin() {
 
         <form className="admin-auth-form" onSubmit={handleSubmit} noValidate>
           <div className="admin-field-group">
-            <label htmlFor="identifier">Admin username or email</label>
+            <label htmlFor="identifier">Manager email</label>
             <input
               id="identifier"
               name="identifier"
-              type="text"
-              placeholder="admin@example.gov"
+              type="email"
+              placeholder="manager@example.gov"
               value={form.identifier}
               onChange={handleChange}
               aria-invalid={Boolean(errors.identifier)}
               aria-describedby={errors.identifier ? "identifier-error" : undefined}
-              autoComplete="username"
+              autoComplete="email"
             />
             {errors.identifier && (
               <span className="field-error" id="identifier-error">
@@ -172,7 +176,7 @@ function AdminLogin() {
         </form>
 
         <div className="admin-notice">
-          Only authorized municipal administrators may use this portal. User registration is not available here.
+          Only accounts assigned the manager role may use this portal. User registration is not available here.
         </div>
       </div>
     </div>

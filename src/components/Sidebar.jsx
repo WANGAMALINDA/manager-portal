@@ -27,12 +27,14 @@ import {
   LogOut,
   Headphones,
 } from "lucide-react";
+import { roleLabel } from "../utils/managerAccess";
 
 const navItems = [
   { key: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { key: "reports", label: "Reports", icon: FolderOpen },
   { key: "assignments", label: "Assignments", icon: ClipboardList },
   { key: "analysis", label: "Analysis", icon: BarChart3 },
+  { key: "profile", label: "Profile", icon: User },
 ];
 
 const ALL_ISSUES_ITEM = { key: "all", label: "All Issues", icon: FolderOpen, color: "#111827" };
@@ -58,11 +60,6 @@ function getCategoryVisual(categoryName) {
   const name = (categoryName || "").toLowerCase();
   const match = CATEGORY_VISUALS.find((c) => c.test(name));
   return match || OTHER_FALLBACK;
-}
-
-const roleLabels = { citizen: "Active Citizen", moderator: "Moderator", admin: "Administrator" };
-function roleLabel(role) {
-  return roleLabels[role] || roleLabels.citizen;
 }
 
 function NavRow({ item, active, onClick }) {
@@ -301,6 +298,9 @@ export default function Sidebar({
         )}
 
         <button
+          type="button"
+          onClick={() => navigate("/dashboard/profile")}
+          aria-label="Open manager profile"
           style={{
             display: "flex",
             alignItems: "center",
