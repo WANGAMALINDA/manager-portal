@@ -92,11 +92,11 @@ function AdminLogin() {
           <div>
             <div className="admin-lozenge">
               <span className="admin-lozenge-dot" aria-hidden="true" />
-              <span className="admin-lozenge-text">Administrator Portal</span>
+              <span className="admin-lozenge-text">Manager Portal</span>
             </div>
 
             <h1 id="admin-login-title" className="admin-auth-title">
-              Secure Admin Login
+              Secure Manager Portal Login
             </h1>
             <p className="admin-auth-copy">
               Sign in with your municipal administrator credentials to manage service reports, approvals,
