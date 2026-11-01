@@ -2,6 +2,12 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Manager access and profile
+
+Only authenticated accounts whose `profiles.role` is `moderator` can access the Manager Portal. Account creation stores the Manager role as `moderator`.
+
+The Profile page shows the signed-in manager's account details and live database counts for total reports, reports awaiting review, in-progress reports, resolved or closed reports, and active unassigned reports.
+
 ## Available Scripts
 
 In the project directory, you can run:
