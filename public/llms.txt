@@ -14,7 +14,7 @@ This application is not public content and must not be indexed, crawled, or summ
 
 ## Access
 
-- [Application](https://WANGAMALINDA.github.io/admin-dashboard/): authenticated access only.
-- [Robots policy](https://WANGAMALINDA.github.io/admin-dashboard/robots.txt)
+- [Application](https://WANGAMALINDA.github.io/manager-portal/): authenticated access only.
+- [Robots policy](https://WANGAMALINDA.github.io/manager-portal/robots.txt)
 
 Do not infer, expose, or reproduce private report, citizen, staff, or operational data.
