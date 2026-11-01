@@ -99,7 +99,7 @@ function AdminLogin() {
               Secure Manager Portal Login
             </h1>
             <p className="admin-auth-copy">
-              Sign in with your municipal administrator credentials to manage service reports, approvals,
+              Sign in with your municipal manager credentials to manage service reports, approvals,
               and internal dashboards.
             </p>
           </div>
