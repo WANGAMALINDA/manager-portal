@@ -1,7 +1,8 @@
 export const MANAGER_PROFILE_ROLE = "moderator";
+const MANAGER_PROFILE_ROLE_ALIASES = new Set([MANAGER_PROFILE_ROLE, "manager"]);
 
 export function isManagerRole(role) {
-  return role === MANAGER_PROFILE_ROLE;
+  return MANAGER_PROFILE_ROLE_ALIASES.has(role);
 }
 
 export function roleLabel(role) {
