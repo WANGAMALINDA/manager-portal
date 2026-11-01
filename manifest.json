@@ -1,6 +1,6 @@
 {
-  "short_name": "TrackServ Admin",
-  "name": "TrackServ Administrative Dashboard",
+  "short_name": "TrackServ Manager",
+  "name": "TrackServ Manager Portal",
   "icons": [
     {
       "src": "web-app-manifest-192x192.png",
