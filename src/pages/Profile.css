@@ -1,0 +1,447 @@
+.manager-profile-page {
+  height: 100%;
+  overflow-y: auto;
+  padding: 30px clamp(16px, 3vw, 40px);
+  background: #f3f6f5;
+  color: #17231e;
+}
+
+.manager-profile-content {
+  display: grid;
+  width: min(100%, 1160px);
+  gap: 22px;
+  margin: 0 auto;
+}
+
+.manager-profile-heading,
+.manager-profile-card-heading,
+.manager-profile-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.manager-profile-heading h1,
+.manager-profile-identity h2,
+.manager-profile-section-heading h2,
+.manager-profile-card-heading h2 {
+  margin: 0;
+  color: #17231e;
+}
+
+.manager-profile-heading h1 {
+  font-size: clamp(26px, 3vw, 32px);
+  letter-spacing: -0.035em;
+}
+
+.manager-profile-eyebrow {
+  margin: 0 0 5px;
+  color: #047857;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.manager-profile-subtitle,
+.manager-profile-section-heading p,
+.manager-profile-card-heading p {
+  margin: 6px 0 0;
+  color: #6b7771;
+  font-size: 13px;
+}
+
+.manager-profile-button {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  padding: 9px 14px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background-color 0.16s ease, transform 0.16s ease;
+}
+
+.manager-profile-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.manager-profile-button:focus-visible {
+  outline: 3px solid rgba(4, 120, 87, 0.25);
+  outline-offset: 2px;
+}
+
+.manager-profile-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.manager-profile-button-primary {
+  background: #047857;
+  color: #fff;
+}
+
+.manager-profile-button-primary:hover:not(:disabled) {
+  background: #036747;
+}
+
+.manager-profile-button-muted {
+  border-color: #e2e8e4;
+  background: #fff;
+  color: #48564f;
+}
+
+.manager-profile-notice {
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-size: 13px;
+}
+
+.manager-profile-notice.is-error {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.manager-profile-notice.is-success {
+  border-color: #bbf7d0;
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.manager-profile-hero,
+.manager-profile-card,
+.manager-profile-stat {
+  border: 1px solid #e3e9e5;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(24, 55, 39, 0.035);
+}
+
+.manager-profile-hero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(240px, auto);
+  align-items: center;
+  gap: 22px;
+  padding: 24px;
+}
+
+.manager-profile-avatar {
+  display: grid;
+  width: 92px;
+  height: 92px;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  border: 4px solid #e8f5ee;
+  border-radius: 50%;
+  background: #d1fae5;
+  color: #047857;
+  font-size: 27px;
+  font-weight: 750;
+}
+
+.manager-profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.manager-profile-identity {
+  min-width: 0;
+}
+
+.manager-profile-identity h2 {
+  margin-top: 6px;
+  font-size: 22px;
+  letter-spacing: -0.025em;
+}
+
+.manager-profile-identity p {
+  max-width: 620px;
+  margin: 8px 0 0;
+  color: #6b7771;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.manager-profile-role {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 5px 10px;
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.manager-profile-hero-meta {
+  display: grid;
+  gap: 12px;
+  border-left: 1px solid #edf1ee;
+  padding-left: 22px;
+  color: #536159;
+  font-size: 13px;
+}
+
+.manager-profile-hero-meta span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  overflow-wrap: anywhere;
+}
+
+.manager-profile-hero-meta svg {
+  flex: 0 0 auto;
+  color: #07805b;
+}
+
+.manager-profile-section-heading h2,
+.manager-profile-card-heading h2 {
+  font-size: 17px;
+  letter-spacing: -0.015em;
+}
+
+.manager-profile-stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.manager-profile-stat {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 14px;
+}
+
+.manager-profile-stat-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 11px;
+}
+
+.manager-profile-stat p {
+  margin: 0;
+  color: #17231e;
+  font-size: 23px;
+  font-weight: 750;
+  line-height: 1.1;
+}
+
+.manager-profile-stat div > span {
+  display: block;
+  margin-top: 5px;
+  color: #6b7771;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.manager-profile-details-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.75fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.manager-profile-card {
+  min-width: 0;
+  padding: 22px;
+}
+
+.manager-profile-contact-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 16px;
+  margin-top: 24px;
+}
+
+.manager-profile-contact-list > div {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 11px;
+  color: #07805b;
+}
+
+.manager-profile-contact-list > div > span {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  color: #35433b;
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.manager-profile-contact-list small {
+  color: #818d86;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.manager-profile-contact-list .manager-profile-about {
+  grid-column: 1 / -1;
+}
+
+.manager-profile-account-card dl {
+  display: grid;
+  gap: 0;
+  margin: 18px 0 0;
+}
+
+.manager-profile-account-card dl > div {
+  display: grid;
+  gap: 5px;
+  border-bottom: 1px solid #edf1ee;
+  padding: 12px 0;
+}
+
+.manager-profile-account-card dl > div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.manager-profile-account-card dt {
+  color: #818d86;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.manager-profile-account-card dd {
+  margin: 0;
+  color: #35433b;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.manager-profile-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.manager-profile-form label {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  color: #48564f;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.manager-profile-form input,
+.manager-profile-form textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #d6dfd9;
+  border-radius: 9px;
+  padding: 10px 12px;
+  background: #fbfcfb;
+  color: #17231e;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.manager-profile-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.manager-profile-form input:focus,
+.manager-profile-form textarea:focus {
+  outline: 2px solid rgba(4, 120, 87, 0.35);
+  border-color: #07805b;
+}
+
+.manager-profile-form-wide {
+  grid-column: 1 / -1;
+}
+
+.manager-profile-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2px;
+}
+
+@media (max-width: 1050px) {
+  .manager-profile-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .manager-profile-page {
+    padding: 22px 16px;
+  }
+
+  .manager-profile-hero {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 16px;
+    padding: 19px;
+  }
+
+  .manager-profile-avatar {
+    width: 76px;
+    height: 76px;
+  }
+
+  .manager-profile-hero-meta {
+    grid-column: 1 / -1;
+    border-top: 1px solid #edf1ee;
+    border-left: 0;
+    padding: 15px 0 0;
+  }
+
+  .manager-profile-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .manager-profile-heading {
+    align-items: flex-start;
+  }
+
+  .manager-profile-heading .manager-profile-button {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .manager-profile-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .manager-profile-stat {
+    padding: 13px 11px;
+  }
+
+  .manager-profile-contact-list,
+  .manager-profile-form {
+    grid-template-columns: 1fr;
+  }
+
+  .manager-profile-form-wide,
+  .manager-profile-contact-list .manager-profile-about {
+    grid-column: auto;
+  }
+
+  .manager-profile-card {
+    padding: 18px;
+  }
+}

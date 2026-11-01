@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { supabase } from "../components/supabaseClient";
 import { isManagerRole, roleLabel } from "../utils/managerAccess";
+import "./Profile.css";
 
 const EMPTY_PROFILE = {
   full_name: "",
@@ -204,168 +205,154 @@ function Profile() {
     .join("");
 
   return (
-    <main style={{ height: "100%", overflowY: "auto", padding: "28px clamp(16px, 3vw, 36px)", background: "#f3f4f6" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gap: 20 }}>
-        <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+    <main className="manager-profile-page">
+      <div className="manager-profile-content">
+        <header className="manager-profile-heading">
           <div>
-            <p style={{ margin: "0 0 5px", color: "#047857", fontWeight: 700, fontSize: 12, letterSpacing: ".08em", textTransform: "uppercase" }}>
-              Manager workspace
-            </p>
-            <h1 style={{ margin: 0, color: "#111827", fontSize: 28 }}>My profile</h1>
-            <p style={{ margin: "7px 0 0", color: "#6b7280" }}>Your account details and live service-report overview.</p>
+            <p className="manager-profile-eyebrow">Manager workspace</p>
+            <h1>My profile</h1>
+            <p className="manager-profile-subtitle">Your account details and service-report overview.</p>
           </div>
-          {!editing ? (
-            <button type="button" onClick={() => { setDraft(profile); setEditing(true); setErrorMessage(""); setSuccessMessage(""); }}
-              style={buttonStyle("#047857")}>
+          {!editing && (
+            <button
+              type="button"
+              onClick={() => {
+                setDraft(profile);
+                setEditing(true);
+                setErrorMessage("");
+                setSuccessMessage("");
+              }}
+              className="manager-profile-button manager-profile-button-primary"
+            >
               <Pencil size={16} /> Edit profile
             </button>
-          ) : null}
+          )}
         </header>
 
-        {errorMessage ? (
-          <div role="alert" style={{ padding: "12px 16px", borderRadius: 10, background: "#fef2f2", color: "#991b1b" }}>
-            {errorMessage}
-          </div>
-        ) : null}
-        {successMessage ? (
-          <div role="status" style={{ padding: "12px 16px", borderRadius: 10, background: "#ecfdf5", color: "#047857" }}>
-            {successMessage}
-          </div>
-        ) : null}
+        {errorMessage && (
+          <div className="manager-profile-notice is-error" role="alert">{errorMessage}</div>
+        )}
+        {successMessage && (
+          <div className="manager-profile-notice is-success" role="status">{successMessage}</div>
+        )}
 
-        <section style={cardStyle}>
-          <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
-            <div style={{ width: 76, height: 76, borderRadius: "50%", overflow: "hidden", display: "grid", placeItems: "center", background: "#d1fae5", color: "#047857", fontSize: 24, fontWeight: 700 }}>
-              {profile.profile_picture
-                ? <img src={profile.profile_picture} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                : initials || <UserRound size={32} />}
-            </div>
-            <div style={{ flex: "1 1 260px" }}>
-              <h2 style={{ margin: "0 0 5px", color: "#111827", fontSize: 22 }}>{displayName}</h2>
-              <span style={{ display: "inline-flex", padding: "4px 10px", borderRadius: 999, background: "#ecfdf5", color: "#047857", fontSize: 12, fontWeight: 700 }}>
-                {roleLabel(profile.role)}
-              </span>
-            </div>
-            <div style={{ display: "grid", gap: 9, color: "#4b5563", fontSize: 14 }}>
-              <span style={detailStyle}><Mail size={16} />{profile.email || "Email not set"}</span>
-              <span style={detailStyle}><CalendarDays size={16} />Member since {formatMemberSince(profile.created_at)}</span>
-            </div>
+        <section className="manager-profile-hero" aria-label="Profile summary">
+          <div className="manager-profile-avatar">
+            {profile.profile_picture
+              ? <img src={profile.profile_picture} alt={`${displayName} profile`} />
+              : initials || <UserRound size={34} />}
+          </div>
+          <div className="manager-profile-identity">
+            <span className="manager-profile-role">{roleLabel(profile.role)}</span>
+            <h2>{displayName}</h2>
+            <p>{profile.about || "Add a short introduction to your manager profile."}</p>
+          </div>
+          <div className="manager-profile-hero-meta">
+            <span><Mail size={16} />{profile.email || "Email not set"}</span>
+            <span><CalendarDays size={16} />Member since {formatMemberSince(profile.created_at)}</span>
           </div>
         </section>
 
-        <section aria-labelledby="manager-stats-title">
-          <div style={{ marginBottom: 12 }}>
-            <h2 id="manager-stats-title" style={{ margin: 0, color: "#111827", fontSize: 18 }}>Service report statistics</h2>
-            <p style={{ margin: "5px 0 0", color: "#6b7280", fontSize: 13 }}>Live counts across reports visible to the Manager Portal.</p>
+        <section className="manager-profile-stats-section" aria-labelledby="manager-stats-title">
+          <div className="manager-profile-section-heading">
+            <div>
+              <h2 id="manager-stats-title">Service report statistics</h2>
+              <p>Live counts across reports visible to the Manager Portal.</p>
+            </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12 }}>
+          <div className="manager-profile-stats">
             {STAT_DEFINITIONS.map(({ key, label, Icon, color, background }) => (
-              <article key={key} style={{ ...cardStyle, padding: 16 }}>
-                <span style={{ width: 34, height: 34, display: "grid", placeItems: "center", borderRadius: 9, color, background }}>
+              <article className="manager-profile-stat" key={key}>
+                <span className="manager-profile-stat-icon" style={{ color, background }}>
                   <Icon size={18} />
                 </span>
-                <p style={{ margin: "14px 0 2px", color: "#111827", fontSize: 25, fontWeight: 750 }}>
-                  {stats?.[key] ?? 0}
-                </p>
-                <p style={{ margin: 0, color: "#6b7280", fontSize: 13 }}>{label}</p>
+                <div>
+                  <p>{stats?.[key] ?? 0}</p>
+                  <span>{label}</span>
+                </div>
               </article>
             ))}
           </div>
         </section>
 
-        <section style={cardStyle}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 18, flexWrap: "wrap" }}>
-            <div>
-              <h2 style={{ margin: 0, color: "#111827", fontSize: 18 }}>Contact details</h2>
-              <p style={{ margin: "5px 0 0", color: "#6b7280", fontSize: 13 }}>Keep your manager profile information up to date.</p>
+        <div className="manager-profile-details-grid">
+          <section className="manager-profile-card">
+            <div className="manager-profile-card-heading">
+              <div>
+                <h2>Contact details</h2>
+                <p>Keep your manager profile information up to date.</p>
+              </div>
+              {editing && (
+                <button
+                  type="button"
+                  className="manager-profile-button manager-profile-button-muted"
+                  onClick={() => {
+                    setDraft(profile);
+                    setEditing(false);
+                    setErrorMessage("");
+                  }}
+                  disabled={saving}
+                >
+                  <X size={16} /> Cancel
+                </button>
+              )}
             </div>
-            {editing ? (
-              <button type="button" onClick={() => { setDraft(profile); setEditing(false); setErrorMessage(""); }} style={buttonStyle("#4b5563")}>
-                <X size={16} /> Cancel
-              </button>
-            ) : null}
-          </div>
 
-          {editing ? (
-            <form onSubmit={saveProfile} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 }}>
-              <label style={fieldLabel}>Full name
-                <input name="full_name" value={draft.full_name || ""} onChange={updateDraft} required maxLength={120} style={inputStyle} />
-              </label>
-              <label style={fieldLabel}>Phone
-                <input name="phone" type="tel" value={draft.phone || ""} onChange={updateDraft} style={inputStyle} />
-              </label>
-              <label style={fieldLabel}>Office / service area
-                <input name="location" value={draft.location || ""} onChange={updateDraft} style={inputStyle} />
-              </label>
-              <label style={{ ...fieldLabel, gridColumn: "1 / -1" }}>About
-                <textarea name="about" value={draft.about || ""} onChange={updateDraft} rows={3} style={{ ...inputStyle, resize: "vertical" }} />
-              </label>
-              <button type="submit" disabled={saving} style={{ ...buttonStyle("#047857"), gridColumn: "1 / -1", justifySelf: "start", opacity: saving ? 0.65 : 1 }}>
-                <Save size={16} />{saving ? "Saving..." : "Save profile"}
-              </button>
-            </form>
-          ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 18 }}>
-              <span style={detailStyle}><UserRound size={17} />{profile.full_name || "Name not set"}</span>
-              <span style={detailStyle}><Phone size={17} />{profile.phone || "Phone not set"}</span>
-              <span style={detailStyle}><MapPin size={17} />{profile.location || "Service area not set"}</span>
-              {profile.about ? <p style={{ gridColumn: "1 / -1", margin: 0, color: "#4b5563", lineHeight: 1.6 }}>{profile.about}</p> : null}
+            {editing ? (
+              <form className="manager-profile-form" onSubmit={saveProfile}>
+                <label>
+                  Full name
+                  <input name="full_name" value={draft.full_name || ""} onChange={updateDraft} required maxLength={120} />
+                </label>
+                <label>
+                  Phone
+                  <input name="phone" type="tel" value={draft.phone || ""} onChange={updateDraft} maxLength={40} />
+                </label>
+                <label className="manager-profile-form-wide">
+                  Office / service area
+                  <input name="location" value={draft.location || ""} onChange={updateDraft} maxLength={160} />
+                </label>
+                <label className="manager-profile-form-wide">
+                  About
+                  <textarea name="about" value={draft.about || ""} onChange={updateDraft} rows={4} maxLength={500} />
+                </label>
+                <div className="manager-profile-form-actions manager-profile-form-wide">
+                  <button type="submit" disabled={saving} className="manager-profile-button manager-profile-button-primary">
+                    <Save size={16} />{saving ? "Saving..." : "Save changes"}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="manager-profile-contact-list">
+                <div><Phone size={17} /><span><small>Phone</small>{profile.phone || "Not provided"}</span></div>
+                <div><MapPin size={17} /><span><small>Office / service area</small>{profile.location || "Not provided"}</span></div>
+                <div className="manager-profile-about">
+                  <UserRound size={17} />
+                  <span><small>About</small>{profile.about || "No introduction added yet."}</span>
+                </div>
+              </div>
+            )}
+          </section>
+
+          <aside className="manager-profile-card manager-profile-account-card">
+            <div className="manager-profile-card-heading">
+              <div>
+                <h2>Account overview</h2>
+                <p>Your account information.</p>
+              </div>
             </div>
-          )}
-        </section>
+            <dl>
+              <div><dt>Account name</dt><dd>{profile.full_name || "Name not set"}</dd></div>
+              <div><dt>Email address</dt><dd>{profile.email || "Email not set"}</dd></div>
+              <div><dt>Username</dt><dd>{profile.username || "Not set"}</dd></div>
+              <div><dt>Account type</dt><dd>{roleLabel(profile.role)}</dd></div>
+              <div><dt>Member since</dt><dd>{formatMemberSince(profile.created_at)}</dd></div>
+            </dl>
+          </aside>
+        </div>
       </div>
     </main>
   );
 }
-
-const cardStyle = {
-  background: "#fff",
-  border: "1px solid #e5e7eb",
-  borderRadius: 14,
-  padding: 20,
-  boxShadow: "0 1px 3px rgba(17, 24, 39, .05)",
-};
-
-const buttonStyle = (background) => ({
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: 8,
-  border: 0,
-  borderRadius: 9,
-  padding: "10px 15px",
-  background,
-  color: "#fff",
-  fontSize: 14,
-  fontWeight: 650,
-  cursor: "pointer",
-});
-
-const detailStyle = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 9,
-  color: "#4b5563",
-  fontSize: 14,
-};
-
-const fieldLabel = {
-  display: "grid",
-  gap: 7,
-  color: "#374151",
-  fontSize: 13,
-  fontWeight: 650,
-};
-
-const inputStyle = {
-  width: "100%",
-  boxSizing: "border-box",
-  border: "1px solid #d1d5db",
-  borderRadius: 8,
-  padding: "10px 12px",
-  color: "#111827",
-  font: "inherit",
-  fontWeight: 400,
-};
 
 export default Profile;

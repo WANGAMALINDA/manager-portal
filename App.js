@@ -55,12 +55,12 @@ function Dashboard() {
 
   const content = activePage === 'reports'
     ? <ReportsPage selectedCategory={selectedCategory} onReportClick={() => setActivePage('reportIssues')} />
+    : activePage === 'profile'
+    ? <Profile />
     : activePage === 'reportIssues'
     ? <ReportIssues />
     : activePage === 'about'
     ? <About selectedCategory={selectedCategory} onReportClick={() => setActivePage('reportIssues')}/>
-    : activePage === 'profile'
-    ? <Profile />
     : activePage === 'community'
     ? <CommunityPage />
     : activePage === 'services'
