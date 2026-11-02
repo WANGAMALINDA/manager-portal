@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/manager-portal/static/css/main.ba4314ea.css",
-    "main.js": "/manager-portal/static/js/main.5df729ef.js",
+    "main.js": "/manager-portal/static/js/main.6b9ed001.js",
     "static/js/453.f84a2a4d.chunk.js": "/manager-portal/static/js/453.f84a2a4d.chunk.js",
     "static/media/TrackServ_Terms&Conditions.pdf": "/manager-portal/static/media/TrackServ_Terms&Conditions.7195f0549375c7ee1d78.pdf",
     "index.html": "/manager-portal/index.html",
     "main.ba4314ea.css.map": "/manager-portal/static/css/main.ba4314ea.css.map",
-    "main.5df729ef.js.map": "/manager-portal/static/js/main.5df729ef.js.map",
+    "main.6b9ed001.js.map": "/manager-portal/static/js/main.6b9ed001.js.map",
     "453.f84a2a4d.chunk.js.map": "/manager-portal/static/js/453.f84a2a4d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ba4314ea.css",
-    "static/js/main.5df729ef.js"
+    "static/js/main.6b9ed001.js"
   ]
 }
