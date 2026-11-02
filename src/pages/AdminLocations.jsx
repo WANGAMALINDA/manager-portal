@@ -54,6 +54,15 @@ function isOverdue(row) {
   return ageMs > OVERDUE_AFTER_DAYS * 24 * 60 * 60 * 1000;
 }
 
+function hasValidCoordinates(latitude, longitude) {
+  return Number.isFinite(latitude)
+    && Number.isFinite(longitude)
+    && latitude >= -90
+    && latitude <= 90
+    && longitude >= -180
+    && longitude <= 180;
+}
+
 function StatCard({ label, value, description, colorClass, icon: Icon }) {
   return (
     <div className={`manager-stat-card ${colorClass}`}>
@@ -461,11 +470,11 @@ export default function AdminLocations() {
                   >
                     <TileLayer key={mapMode} url={TILE_LAYERS[mapMode].url} attribution={TILE_LAYERS[mapMode].attribution} />
                     {mapLocations
-                      .filter((item) => typeof item.lat === "number" && typeof item.lng === "number" && !Number.isNaN(item.lat) && !Number.isNaN(item.lng))
+                      .filter((item) => hasValidCoordinates(item.lat, item.lng))
                       .map((item) => (
                         <Marker
                           key={item.id}
-                          center={[item.lat, item.lng]}
+                          position={[item.lat, item.lng]}
                           icon={getLocationIcon(item.markerColor)}
                         >
                           <Popup>
