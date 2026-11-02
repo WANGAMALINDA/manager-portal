@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { KeyRound, Mail, MapPin, ShieldCheck } from "lucide-react";
 import { supabase } from "../components/supabaseClient";
 import { isManagerRole } from "../utils/managerAccess";
-import "./AdminLogin.css";
+import "./ManagerLogin.css";
+
+const SIGN_IN_ERROR_MESSAGE =
+  "We couldn't sign you in. Please check your details or contact your administrator.";
 
 const initialAdminState = {
   identifier: "",
@@ -27,7 +31,7 @@ function AdminLogin() {
     const nextErrors = {};
 
     if (!form.identifier.trim()) {
-      nextErrors.identifier = "Manager email is required.";
+      nextErrors.identifier = "Please enter your email address.";
     }
 
     if (!form.password.trim()) {
@@ -59,13 +63,13 @@ function AdminLogin() {
 
     if (error) {
       setSubmitting(false);
-      setAuthError("Invalid credentials. Please check your manager email and password.");
+      setAuthError(SIGN_IN_ERROR_MESSAGE);
       return;
     }
 
     if (!data.user) {
       setSubmitting(false);
-      setAuthError("Sign-in succeeded without a user session. Please try again.");
+      setAuthError(SIGN_IN_ERROR_MESSAGE);
       return;
     }
 
@@ -78,9 +82,7 @@ function AdminLogin() {
     if (profileError || !isManagerRole(profile?.role)) {
       await supabase.auth.signOut();
       setSubmitting(false);
-      setAuthError(profileError
-        ? "Unable to verify manager access. Please try again."
-        : "Only manager accounts can sign in to this portal.");
+      setAuthError(SIGN_IN_ERROR_MESSAGE);
       return;
     }
 
@@ -89,55 +91,65 @@ function AdminLogin() {
   };
 
   return (
-    <div className="admin-auth-page">
-      <div className="admin-auth-card" role="main" aria-labelledby="admin-login-title">
-        <div className="admin-auth-header">
+    <main className="manager-login" aria-labelledby="manager-login-title">
+      <div className="manager-login__blob manager-login__blob--one" aria-hidden="true" />
+      <div className="manager-login__blob manager-login__blob--two" aria-hidden="true" />
 
-          <div>
-            <div className="admin-lozenge">
-              <span className="admin-lozenge-dot" aria-hidden="true" />
-              <span className="admin-lozenge-text">Manager Portal</span>
-            </div>
-
-            <h1 id="admin-login-title" className="admin-auth-title">
-              Secure Manager Portal Login
-            </h1>
-            <p className="admin-auth-copy">
-              Sign in with your municipal manager credentials to manage service reports, approvals,
-              and internal dashboards.
-            </p>
-          </div>
+      <section className="manager-login__card">
+        <div className="manager-login__brand" aria-label="TrackServ Manager Portal">
+          <span className="manager-login__brand-icon"><MapPin size={20} aria-hidden="true" /></span>
+          <span className="manager-login__brand-name">Track<span>Serv</span></span>
         </div>
 
-        <form className="admin-auth-form" onSubmit={handleSubmit} noValidate>
-          <div className="admin-field-group">
+        <div className="manager-login__eyebrow">
+          <ShieldCheck size={15} aria-hidden="true" />
+          <span>Manager Portal</span>
+        </div>
+
+        <h1 id="manager-login-title">Welcome back</h1>
+        <p className="manager-login__subtitle">
+          Sign in to manage service reports, approvals, and municipal operations.
+        </p>
+
+        <form className="manager-login__form" onSubmit={handleSubmit} noValidate>
+          {(authError || errors.identifier || errors.password) && (
+            <div className="manager-login__alert" role="alert">
+              {authError || errors.identifier || errors.password}
+            </div>
+          )}
+
+          <div className="manager-login__field">
             <label htmlFor="identifier">Manager email</label>
-            <input
-              id="identifier"
-              name="identifier"
-              type="email"
-              placeholder="manager@example.gov"
-              value={form.identifier}
-              onChange={handleChange}
-              aria-invalid={Boolean(errors.identifier)}
-              aria-describedby={errors.identifier ? "identifier-error" : undefined}
-              autoComplete="email"
-            />
+            <div className="manager-login__input-wrap">
+              <Mail className="manager-login__input-icon" size={18} aria-hidden="true" />
+              <input
+                id="identifier"
+                name="identifier"
+                type="email"
+                placeholder="you@example.com"
+                value={form.identifier}
+                onChange={handleChange}
+                aria-invalid={Boolean(errors.identifier)}
+                aria-describedby={errors.identifier ? "identifier-error" : undefined}
+                autoComplete="email"
+              />
+            </div>
             {errors.identifier && (
-              <span className="field-error" id="identifier-error">
+              <span className="manager-login__field-error" id="identifier-error">
                 {errors.identifier}
               </span>
             )}
           </div>
 
-          <div className="admin-field-group">
+          <div className="manager-login__field">
             <label htmlFor="admin-password">Password</label>
-            <div className="admin-password-row">
+            <div className="manager-login__input-wrap">
+              <KeyRound className="manager-login__input-icon" size={18} aria-hidden="true" />
               <input
                 id="admin-password"
                 name="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter your secure password"
+                placeholder="Enter your password"
                 value={form.password}
                 onChange={handleChange}
                 aria-invalid={Boolean(errors.password)}
@@ -146,7 +158,7 @@ function AdminLogin() {
               />
               <button
                 type="button"
-                className="admin-password-toggle"
+                className="manager-login__password-toggle"
                 onClick={() => setShowPassword((current) => !current)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
@@ -154,32 +166,22 @@ function AdminLogin() {
               </button>
             </div>
             {errors.password && (
-              <span className="field-error" id="password-error">
+              <span className="manager-login__field-error" id="password-error">
                 {errors.password}
               </span>
             )}
           </div>
 
-          <div className="admin-actions">
-            <div />
-          </div>
-
-          {authError && (
-            <span className="field-error" role="alert">
-              {authError}
-            </span>
-          )}
-
-          <button className="admin-auth-button" type="submit" disabled={submitting}>
-            {submitting ? "Signing in..." : "Login"}
+          <button className="manager-login__submit" type="submit" disabled={submitting}>
+            {submitting ? (
+              <><span className="manager-login__spinner" aria-hidden="true" /> Signing in…</>
+            ) : "Sign in"}
           </button>
         </form>
 
-        <div className="admin-notice">
-          Only accounts assigned the manager role may use this portal. User registration is not available here.
-        </div>
-      </div>
-    </div>
+        <p className="manager-login__footer">Authorized managers only</p>
+      </section>
+    </main>
   );
 }
 

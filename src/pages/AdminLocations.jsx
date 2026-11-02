@@ -1,29 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { divIcon } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { MapPin, FileText, Clock, CheckCircle2, AlertTriangle } from "lucide-react";
+import { MapPin, FileText, Clock, CheckCircle2, AlertTriangle, SlidersHorizontal } from "lucide-react";
 import { supabase } from "../components/supabaseClient";
 import "./AdminLocations.css";
 import Footer from "../components/footer"
-
-const COLORS = {
-  green900: "#064E3B",
-  green700: "#15803D",
-  green600: "#16A34A",
-  green100: "#DCFCE7",
-  amber500: "#F59E0B",
-  amber100: "#FEF3C7",
-  blue500: "#3B82F6",
-  blue100: "#DBEAFE",
-  purple500: "#A855F7",
-  red500: "#EF4444",
-  ink900: "#111827",
-  ink700: "#374151",
-  ink500: "#6B7280",
-  ink300: "#D1D5DB",
-  ink200: "#E5E7EB",
-  ink100: "#F3F4F6",
-};
 
 const TILE_LAYERS = {
   Map: {
@@ -74,17 +56,25 @@ function isOverdue(row) {
 
 function StatCard({ label, value, description, colorClass, icon: Icon }) {
   return (
-    <div className="stat-card">
-      <div className="stat-card-top">
-        <span className={`stat-icon ${colorClass}`}><Icon size={20} /></span>
-        <div>
-          <p className="stat-value">{value}</p>
-
-        </div>
+    <div className={`manager-stat-card ${colorClass}`}>
+      <span className="manager-stat-icon"><Icon size={20} aria-hidden="true" /></span>
+      <div className="manager-stat-copy">
+        <span className="manager-stat-label">{label}</span>
+        <strong className="manager-stat-value">{value}</strong>
+        <small>{description}</small>
       </div>
-      <p className="stat-label">{label}</p>
     </div>
   );
+}
+
+function getLocationIcon(color) {
+  return divIcon({
+    className: "manager-location-pin-container",
+    html: `<span class="manager-location-pin" style="--pin-color:${color}"><span></span></span>`,
+    iconSize: [30, 38],
+    iconAnchor: [15, 36],
+    popupAnchor: [0, -34],
+  });
 }
 
 // Styled to match the "Category Breakdown" card on the Analysis page:
@@ -252,11 +242,11 @@ export default function AdminLocations() {
   const recentLocations = useMemo(() => filteredLocations.slice(0, 4), [filteredLocations]);
 
   const stats = useMemo(() => {
-    const total = rows.length;
-    const active = rows.filter((r) => OPEN_STATUSES.includes(r.status)).length;
-    const inProgress = rows.filter((r) => r.status === "in_progress").length;
-    const resolved = rows.filter((r) => r.status === "resolved" || r.status === "closed").length;
-    const overdue = rows.filter((r) => r.overdue).length;
+    const total = filteredLocations.length;
+    const active = filteredLocations.filter((r) => OPEN_STATUSES.includes(r.status)).length;
+    const inProgress = filteredLocations.filter((r) => r.status === "in_progress").length;
+    const resolved = filteredLocations.filter((r) => r.status === "resolved" || r.status === "closed").length;
+    const overdue = filteredLocations.filter((r) => r.overdue).length;
     return [
       { label: "Total Locations", value: String(total), description: `${active} currently active`, colorClass: "green", icon: MapPin },
       { label: "Active Reports", value: String(active), description: `${overdue} overdue`, colorClass: "blue", icon: FileText },
@@ -264,14 +254,14 @@ export default function AdminLocations() {
       { label: "Resolved", value: String(resolved), description: "Resolved or closed", colorClass: "purple", icon: CheckCircle2 },
       { label: "Overdue", value: String(overdue), description: `Open more than ${OVERDUE_AFTER_DAYS} days`, colorClass: "red", icon: AlertTriangle },
     ];
-  }, [rows]);
+  }, [filteredLocations]);
 
   const donutSegments = useMemo(() => {
-    const active = rows.filter((r) => OPEN_STATUSES.includes(r.status) && !r.overdue).length;
-    const inProgress = rows.filter((r) => r.status === "in_progress").length;
-    const resolved = rows.filter((r) => r.status === "resolved" || r.status === "closed").length;
-    const overdue = rows.filter((r) => r.overdue).length;
-    const total = rows.length || 1;
+    const active = filteredLocations.filter((r) => OPEN_STATUSES.includes(r.status) && !r.overdue).length;
+    const inProgress = filteredLocations.filter((r) => r.status === "in_progress").length;
+    const resolved = filteredLocations.filter((r) => r.status === "resolved" || r.status === "closed").length;
+    const overdue = filteredLocations.filter((r) => r.overdue).length;
+    const total = filteredLocations.length || 1;
     const raw = [
       { label: "Active", value: active, color: "#ef4444" },
       { label: "In Progress", value: inProgress, color: "#f59e0b" },
@@ -279,19 +269,19 @@ export default function AdminLocations() {
       { label: "Overdue", value: overdue, color: "#8b5cf6" },
     ];
     return raw.map((segment) => ({ ...segment, pct: (segment.value / total) * 100 }));
-  }, [rows]);
+  }, [filteredLocations]);
   const donutTotal = donutSegments.reduce((sum, s) => sum + s.value, 0);
 
   const topAreas = useMemo(() => {
     const counts = new Map();
-    rows.forEach((r) => {
+    filteredLocations.forEach((r) => {
       counts.set(r.location, (counts.get(r.location) || 0) + 1);
     });
     return [...counts.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 5)
       .map(([location, count]) => ({ location, count }));
-  }, [rows]);
+  }, [filteredLocations]);
 
   const handleAddLocation = () => setShowAddModal(true);
 
@@ -360,7 +350,6 @@ export default function AdminLocations() {
   };
 
   const handleToggleFilters = () => setShowFilters((value) => !value);
-  const handleApplyFilters = () => setNotification("Filters applied to the location table.");
   const handleResetFilters = () => {
     setSelectedCategory("All Categories");
     setSelectedStatus("All Statuses");
@@ -369,12 +358,12 @@ export default function AdminLocations() {
   };
 
   return (
-    <div className="home-page" style={{ backgroundColor: "#f3f4f6", minHeight: "100vh", paddingTop: 20, paddingBottom: 0, paddingLeft: 40, paddingRight: 30 }}>
-    <div style={{maxWidth: 1300, margin: "0 10", display: "flex", flexDirection: "column", gap: 20}}>
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16, gap: 12, flexWrap: "wrap" }}>
+    <div className="admin-locations-page">
+    <div className="page-shell">
+      <div className="page-header">
         <div>
-          <h1 style={{ margin: "0 0 3px", fontWeight: 800, letterSpacing: "-.01em", color: COLORS.ink900 }}>Dashboard</h1>
-          <p style={{ margin: 0, color: COLORS.ink500, fontSize: 11.5 }}>System overview and stastistics.</p>
+          <h1>Dashboard</h1>
+          <p className="subtitle">System overview and statistics.</p>
         </div>
       </div>
 
@@ -395,7 +384,7 @@ export default function AdminLocations() {
           <div className="table-card">Loading locations…</div>
         ) : (
           <>
-            <section className="stats-grid">
+            <section className="manager-stats-grid">
               {stats.map((item) => (
                 <StatCard key={item.label} {...item} />
               ))}
@@ -416,7 +405,18 @@ export default function AdminLocations() {
                   </div>
                 </div>
                 <div className="map-toolbar">
-                  <button className="toolbar-button" onClick={handleToggleFilters}>Filters</button>
+                  <button
+                    className="toolbar-button map-filter-toggle"
+                    onClick={handleToggleFilters}
+                    aria-expanded={showFilters}
+                    aria-controls="manager-map-filters"
+                  >
+                    <SlidersHorizontal size={16} aria-hidden="true" />
+                    Filters
+                    {(selectedCategory !== "All Categories" || selectedStatus !== "All Statuses" || searchQuery) && (
+                      <span className="map-filter-count">Active</span>
+                    )}
+                  </button>
                   <div className="toolbar-actions">
                     <button className="toolbar-button" onClick={handleZoomIn}>＋</button>
                     <button className="toolbar-button" onClick={handleZoomOut}>−</button>
@@ -424,6 +424,33 @@ export default function AdminLocations() {
                     <button className="toolbar-button" onClick={handleCenterLocation}>◎</button>
                   </div>
                 </div>
+                {showFilters && (
+                  <div className="map-filters-panel" id="manager-map-filters">
+                    <div className="filter-group">
+                      <label htmlFor="map-search">Search locations</label>
+                      <input
+                        id="map-search"
+                        type="search"
+                        value={searchQuery}
+                        onChange={(event) => setSearchQuery(event.target.value)}
+                        placeholder="Search title, area or category"
+                      />
+                    </div>
+                    <div className="filter-group">
+                      <label htmlFor="map-category">Category</label>
+                      <select id="map-category" value={selectedCategory} onChange={(event) => setSelectedCategory(event.target.value)}>
+                        {categoryOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+                      </select>
+                    </div>
+                    <div className="filter-group">
+                      <label htmlFor="map-status">Status</label>
+                      <select id="map-status" value={selectedStatus} onChange={(event) => setSelectedStatus(event.target.value)}>
+                        {statusOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+                      </select>
+                    </div>
+                    <button className="filter-reset-button" onClick={handleResetFilters}>Reset filters</button>
+                  </div>
+                )}
                 <div className="map-scene">
                   <MapContainer
                     center={MAP_CENTER}
@@ -436,11 +463,10 @@ export default function AdminLocations() {
                     {mapLocations
                       .filter((item) => typeof item.lat === "number" && typeof item.lng === "number" && !Number.isNaN(item.lat) && !Number.isNaN(item.lng))
                       .map((item) => (
-                        <CircleMarker
+                        <Marker
                           key={item.id}
                           center={[item.lat, item.lng]}
-                          radius={9}
-                          pathOptions={{ color: item.markerColor, fillColor: item.markerColor, fillOpacity: 0.85, weight: 2 }}
+                          icon={getLocationIcon(item.markerColor)}
                         >
                           <Popup>
                             <strong>{item.title}</strong>
@@ -452,7 +478,7 @@ export default function AdminLocations() {
                             <br />
                             Reported by {item.reporter} · {item.date}
                           </Popup>
-                        </CircleMarker>
+                        </Marker>
                       ))}
                   </MapContainer>
                 </div>
@@ -467,8 +493,24 @@ export default function AdminLocations() {
 
               <aside className="overview-card">
                 <div className="overview-header">
-                  <p className="card-title">Location Overview</p>
-                  <p className="card-subtitle">Current distribution of report locations.</p>
+                  <div>
+                    <p className="card-title">Location Overview</p>
+                    <p className="card-subtitle">{filteredLocations.length} matching locations</p>
+                  </div>
+                </div>
+                <div className="overview-filters" aria-label="Filter location overview">
+                  <label>
+                    <span>Category</span>
+                    <select value={selectedCategory} onChange={(event) => setSelectedCategory(event.target.value)}>
+                      {categoryOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+                    </select>
+                  </label>
+                  <label>
+                    <span>Status</span>
+                    <select value={selectedStatus} onChange={(event) => setSelectedStatus(event.target.value)}>
+                      {statusOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+                    </select>
+                  </label>
                 </div>
                 <ProgressDonut segments={donutSegments} total={donutTotal} />
                 <div className="top-areas">
@@ -511,57 +553,24 @@ export default function AdminLocations() {
                     <tbody>
                       {recentLocations.map((item) => (
                         <tr key={item.id}>
-                          <td>{item.title}</td>
-                          <td>{item.location}</td>
-                          <td><span className="badge category-badge">{item.category}</span></td>
-                          <td>
+                          <td data-label="Report title">{item.title}</td>
+                          <td data-label="Location">{item.location}</td>
+                          <td data-label="Category"><span className="badge category-badge">{item.category}</span></td>
+                          <td data-label="Status">
                             <span className={`badge status-badge ${item.badgeClass}`}>{item.statusLabel}</span>
                             {item.overdue && <span className="badge status-badge red" style={{ marginLeft: 6 }}>Overdue</span>}
                           </td>
-                          <td>{item.date}</td>
+                          <td data-label="Date reported">{item.date}</td>
                         </tr>
                       ))}
                       {recentLocations.length === 0 && (
-                        <tr><td colSpan={5}>No locations match the current filters.</td></tr>
+                        <tr><td className="empty-table-cell" colSpan={5}>No locations match the current filters.</td></tr>
                       )}
                     </tbody>
                   </table>
                 </div>
               </article>
 
-              {showFilters && (
-                <aside className="filters-card">
-                  <div className="filters-header">
-                    <p className="card-title">Location Filters</p>
-                    <p className="card-subtitle">Narrow your view by category or status.</p>
-                  </div>
-                  <div className="filter-group">
-                    <label>Search Location</label>
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(event) => setSearchQuery(event.target.value)}
-                      placeholder="Search by title, area or category"
-                    />
-                  </div>
-                  <div className="filter-group">
-                    <label>Category</label>
-                    <select value={selectedCategory} onChange={(event) => setSelectedCategory(event.target.value)}>
-                      {categoryOptions.map((option) => <option key={option} value={option}>{option}</option>)}
-                    </select>
-                  </div>
-                  <div className="filter-group">
-                    <label>Status</label>
-                    <select value={selectedStatus} onChange={(event) => setSelectedStatus(event.target.value)}>
-                      {statusOptions.map((option) => <option key={option} value={option}>{option}</option>)}
-                    </select>
-                  </div>
-                  <div className="filter-actions">
-                    <button className="btn btn-primary full-width" onClick={handleApplyFilters}>Apply Filters</button>
-                    <button className="btn btn-outline full-width" onClick={handleResetFilters}>Reset Filters</button>
-                  </div>
-                </aside>
-              )}
             </section>
           </>
         )}

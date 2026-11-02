@@ -554,14 +554,14 @@
   -webkit-overflow-scrolling: touch;
 }
 
-table {
+.admin-locations-page .table-responsive table {
   width: 100%;
   border-collapse: collapse;
   min-width: 750px;
 }
 
-th,
-td {
+.admin-locations-page .table-responsive th,
+.admin-locations-page .table-responsive td {
   padding: 16px 14px;
   text-align: left;
   border-bottom: 1px solid #f3f4f6;
@@ -576,7 +576,7 @@ th {
   white-space: nowrap;
 }
 
-tbody tr:hover {
+.admin-locations-page .table-responsive tbody tr:hover {
   background: #f8fafc;
 }
 
@@ -892,21 +892,26 @@ tbody tr:hover {
     overflow-x: visible !important;
   }
 
-  table, thead, tbody, th, td, tr {
+  .admin-locations-page .table-responsive table,
+  .admin-locations-page .table-responsive thead,
+  .admin-locations-page .table-responsive tbody,
+  .admin-locations-page .table-responsive th,
+  .admin-locations-page .table-responsive td,
+  .admin-locations-page .table-responsive tr {
     display: block;
     width: 100%;
   }
 
-  thead {
+  .admin-locations-page .table-responsive thead {
     display: none;
   }
 
-  table {
+  .admin-locations-page .table-responsive table {
     min-width: 0 !important;
     background: transparent !important;
   }
 
-  tr {
+  .admin-locations-page .table-responsive tr {
     background: #ffffff !important;
     border: 1px solid var(--border) !important;
     border-radius: 16px !important;
@@ -915,11 +920,11 @@ tbody tr:hover {
     box-shadow: 0 4px 12px rgba(16, 24, 40, 0.03) !important;
   }
 
-  tr:hover {
+  .admin-locations-page .table-responsive tr:hover {
     background: #ffffff !important;
   }
 
-  td {
+  .admin-locations-page .table-responsive td {
     display: flex !important;
     justify-content: flex-start !important;
     align-items: center !important;
@@ -929,16 +934,16 @@ tbody tr:hover {
     font-size: 0.9rem !important;
   }
 
-  td:last-child {
+  .admin-locations-page .table-responsive td:last-child {
     border-bottom: none !important;
     padding-bottom: 0 !important;
   }
 
-  td:first-child {
+  .admin-locations-page .table-responsive td:first-child {
     padding-top: 0 !important;
   }
 
-  td::before {
+  .admin-locations-page .table-responsive td::before {
     content: attr(data-label);
     font-weight: 700;
     color: var(--text-primary);
@@ -979,5 +984,498 @@ tbody tr:hover {
 @media (max-width: 480px) {
   .map-legend {
     grid-template-columns: 1fr !important;
+  }
+}
+
+.admin-locations-page {
+  min-height: 100%;
+  padding: 24px clamp(14px, 3vw, 36px);
+  background: #f4f7f6;
+}
+
+.admin-locations-page .page-shell {
+  max-width: 1380px;
+  margin: 0 auto;
+  gap: 18px;
+}
+
+.admin-locations-page .page-header {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.admin-locations-page .page-header h1 {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.admin-locations-page .page-header .subtitle {
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+.manager-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.manager-stat-card {
+  display: flex;
+  min-width: 0;
+  min-height: 94px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.manager-stat-card.green { background: #f0fdf4; }
+.manager-stat-card.orange { background: #fffbeb; }
+.manager-stat-card.blue { background: #eff6ff; }
+.manager-stat-card.purple { background: #f5f3ff; }
+.manager-stat-card.red { background: #fef2f2; }
+
+.manager-stat-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.manager-stat-card.green .manager-stat-icon { background: #dcfce7; color: #16a34a; }
+.manager-stat-card.orange .manager-stat-icon { background: #fef3c7; color: #f59e0b; }
+.manager-stat-card.blue .manager-stat-icon { background: #dbeafe; color: #3b82f6; }
+.manager-stat-card.purple .manager-stat-icon { background: #ede9fe; color: #7c3aed; }
+.manager-stat-card.red .manager-stat-icon { background: #fee2e2; color: #ef4444; }
+
+.manager-stat-copy {
+  min-width: 0;
+}
+
+.manager-stat-label {
+  display: block;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.manager-stat-value {
+  display: block;
+  margin: 2px 0;
+  color: #111827;
+  font-size: 25px;
+  line-height: 1.15;
+}
+
+.manager-stat-copy small {
+  color: #6b7280;
+  font-size: 10px;
+  line-height: 1.3;
+}
+
+.admin-locations-page .dashboard-grid {
+  grid-template-columns: minmax(0, 1.8fr) minmax(290px, 0.8fr);
+  align-items: stretch;
+  gap: 18px;
+}
+
+.admin-locations-page .map-card,
+.admin-locations-page .overview-card,
+.admin-locations-page .table-card {
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.04);
+}
+
+.admin-locations-page .map-card-header {
+  align-items: center;
+}
+
+.admin-locations-page .card-title {
+  color: #111827;
+  font-size: 16px;
+}
+
+.admin-locations-page .card-subtitle {
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.admin-locations-page .map-controls {
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+  background: #f8fafc;
+}
+
+.admin-locations-page .tab {
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.admin-locations-page .tab.active {
+  border-radius: 8px;
+  color: #047857;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.12);
+}
+
+.admin-locations-page .map-toolbar {
+  margin-bottom: 12px;
+}
+
+.admin-locations-page .toolbar-button {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 11px;
+  border-radius: 9px;
+  background: #fff;
+  font-size: 12px;
+}
+
+.admin-locations-page .toolbar-button:hover,
+.admin-locations-page .toolbar-button:focus-visible {
+  border-color: #16a34a;
+  color: #047857;
+}
+
+.map-filter-count {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 10px;
+}
+
+.map-filters-panel {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr auto;
+  align-items: end;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.admin-locations-page .filter-group {
+  gap: 5px;
+}
+
+.admin-locations-page .filter-group label,
+.overview-filters label > span {
+  color: #4b5563;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.admin-locations-page .filter-group input,
+.admin-locations-page .filter-group select,
+.overview-filters select {
+  min-height: 38px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.filter-reset-button {
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  color: #374151;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.filter-reset-button:hover {
+  border-color: #16a34a;
+  color: #047857;
+}
+
+.admin-locations-page .map-scene {
+  height: 400px;
+  min-height: 320px;
+  border-radius: 12px;
+}
+
+.admin-locations-page .leaflet-map {
+  border-radius: 12px;
+}
+
+.map-card:fullscreen .map-scene {
+  height: calc(100vh - 240px);
+}
+
+.manager-location-pin-container {
+  border: 0;
+  background: transparent;
+}
+
+.manager-location-pin {
+  display: grid;
+  width: 27px;
+  height: 27px;
+  place-items: center;
+  transform: rotate(-45deg);
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  background: var(--pin-color);
+  box-shadow: 0 3px 8px rgba(17, 24, 39, 0.35);
+}
+
+.manager-location-pin > span {
+  width: 8px;
+  height: 8px;
+  transform: rotate(45deg);
+  border-radius: 50%;
+  background: #fff;
+}
+
+.admin-locations-page .map-legend {
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.admin-locations-page .legend-item {
+  gap: 7px;
+  padding: 9px 10px;
+  border-radius: 9px;
+  font-size: 11px;
+}
+
+.admin-locations-page .legend-dot {
+  width: 8px;
+  height: 8px;
+}
+
+.overview-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 14px 0 8px;
+}
+
+.overview-filters label {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+}
+
+.overview-filters select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #e5e7eb;
+  background-color: #fff;
+  color: #111827;
+}
+
+.admin-locations-page .overview-card .top-areas {
+  margin-top: 8px;
+}
+
+.admin-locations-page .top-areas li {
+  padding: 10px 12px;
+  border-radius: 9px;
+  font-size: 12px;
+}
+
+.admin-locations-page .content-grid {
+  grid-template-columns: 1fr;
+}
+
+.admin-locations-page .table-card-header {
+  align-items: center;
+}
+
+.admin-locations-page .table-responsive table {
+  min-width: 650px;
+}
+
+.admin-locations-page .table-responsive th,
+.admin-locations-page .table-responsive td {
+  padding: 12px 10px;
+  font-size: 12px;
+}
+
+.admin-locations-page .table-responsive th {
+  background: #f8fafc;
+  color: #374151;
+}
+
+.admin-locations-page .table-responsive tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.admin-locations-page .table-responsive .empty-table-cell {
+  display: table-cell;
+  text-align: center;
+}
+
+@media (max-width: 1100px) {
+  .manager-stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .admin-locations-page .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-locations-page {
+    padding: 16px 12px;
+  }
+
+  .manager-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .manager-stat-card {
+    min-height: 80px;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .manager-stat-icon {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+
+  .manager-stat-icon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .manager-stat-label { font-size: 10px; }
+  .manager-stat-value { font-size: 21px; }
+  .manager-stat-copy small { font-size: 9px; }
+
+  .admin-locations-page .map-card,
+  .admin-locations-page .overview-card,
+  .admin-locations-page .table-card {
+    padding: 14px;
+  }
+
+  .map-filters-panel {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .map-filters-panel .filter-group:first-child {
+    grid-column: span 2;
+  }
+
+  .map-filters-panel .filter-reset-button {
+    grid-column: span 2;
+  }
+
+  .admin-locations-page .map-scene {
+    min-height: 260px;
+    height: 280px;
+  }
+
+  .admin-locations-page .map-card-header {
+    align-items: flex-start;
+  }
+
+  .admin-locations-page .map-controls {
+    flex-shrink: 0;
+  }
+
+  .admin-locations-page .map-controls .tab {
+    padding: 8px;
+  }
+
+  .admin-locations-page .toolbar-actions {
+    width: auto;
+    justify-content: flex-end;
+  }
+
+  .admin-locations-page .toolbar-button {
+    flex: 0 0 auto;
+  }
+
+  .admin-locations-page .table-responsive {
+    overflow: visible;
+  }
+
+  .admin-locations-page .table-responsive table {
+    min-width: 0;
+  }
+
+  .admin-locations-page .table-responsive thead {
+    display: none;
+  }
+
+  .admin-locations-page .table-responsive tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  .admin-locations-page .table-responsive tr {
+    display: block;
+    width: 100%;
+    margin: 0 !important;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(16, 24, 40, 0.04);
+  }
+
+  .admin-locations-page .table-responsive td {
+    display: flex !important;
+    width: 100% !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: right !important;
+  }
+
+  .admin-locations-page .table-responsive td:first-child {
+    padding-top: 0;
+    color: #111827;
+    font-weight: 600;
+  }
+
+  .admin-locations-page .table-responsive td:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .admin-locations-page .table-responsive td::before {
+    flex: 0 0 98px;
+    margin: 0;
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: left;
+  }
+
+  .admin-locations-page .table-responsive .empty-table-cell {
+    display: block !important;
+    text-align: center !important;
+  }
+
+  .admin-locations-page .table-responsive .empty-table-cell::before {
+    display: none;
   }
 }

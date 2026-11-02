@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { HashRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { supabase } from './components/supabaseClient'
 import AdminLogin from './pages/AdminLogin'
@@ -11,46 +11,11 @@ import Sidebar from './components/Sidebar'
 import { isManagerRole } from './utils/managerAccess'
 import './App.css';
 
-const SESSION_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
-
-function useIdleLogout(timeoutMs) {
-  const navigate = useNavigate();
-  const timerRef = useRef(null);
-
-  const handleLogout = useCallback(async () => {
-    try {
-      await supabase.auth.signOut();
-    } finally {
-      navigate('/');
-    }
-  }, [navigate]);
-
-  useEffect(() => {
-    const resetTimer = () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      timerRef.current = setTimeout(handleLogout, timeoutMs);
-    };
-
-    const activityEvents = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart'];
-    activityEvents.forEach((event) => window.addEventListener(event, resetTimer));
-
-    resetTimer(); // start the timer on mount
-
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      activityEvents.forEach((event) => window.removeEventListener(event, resetTimer));
-    };
-  }, [timeoutMs, handleLogout]);
-}
-
 function Dashboard() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const location = useLocation();
   const navigate = useNavigate();
   const activePage = location.pathname.split('/').filter(Boolean)[1] || 'dashboard';
-
-  // Auto log out after 5 minutes of no user activity.
-  useIdleLogout(SESSION_TIMEOUT_MS);
 
   const content = activePage === 'profile'
     ? <Profile />
@@ -105,13 +70,13 @@ function ManagerRoute() {
 
       if (profileError) {
         await supabase.auth.signOut();
-        navigate("/", { replace: true, state: { authError: "Unable to verify manager access. Please contact an administrator." } });
+        navigate("/", { replace: true, state: { authError: "We couldn't verify your access. Please try again or contact your administrator." } });
         return;
       }
 
       if (!isManagerRole(profile?.role)) {
         await supabase.auth.signOut();
-        navigate("/", { replace: true, state: { authError: "Only manager accounts can access this portal." } });
+        navigate("/", { replace: true, state: { authError: "This account doesn't have access to the Manager Portal. Please contact your administrator." } });
         return;
       }
 
