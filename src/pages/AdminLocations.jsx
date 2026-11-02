@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { divIcon } from "leaflet";
+import { divIcon, latLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { MapPin, FileText, Clock, CheckCircle2, AlertTriangle, SlidersHorizontal } from "lucide-react";
 import { supabase } from "../components/supabaseClient";
@@ -462,7 +462,7 @@ export default function AdminLocations() {
                 )}
                 <div className="map-scene">
                   <MapContainer
-                    center={MAP_CENTER}
+                    center={latLng(MAP_CENTER[0], MAP_CENTER[1])}
                     zoom={DEFAULT_ZOOM}
                     scrollWheelZoom
                     className="leaflet-map"
@@ -474,7 +474,7 @@ export default function AdminLocations() {
                       .map((item) => (
                         <Marker
                           key={item.id}
-                          position={[item.lat, item.lng]}
+                          position={latLng(item.lat, item.lng)}
                           icon={getLocationIcon(item.markerColor)}
                         >
                           <Popup>
