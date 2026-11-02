@@ -26,11 +26,13 @@ import {
   Flag,
   Loader2,
   ImageOff,
+  Eye,
   User,
   Users,
   ThumbsUp,
   RotateCcw,
 } from "lucide-react";
+import "./ReportsPage.css";
 
 
 const COLORS = {
@@ -703,9 +705,9 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
             </div>
 
             {/* Table */}
-            <div style={{ background: "#fff", border: `1px solid ${COLORS.ink200}`, borderRadius: 12, overflow: "hidden" }}>
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 11.5 }}>
+            <div className="manager-reports-table" style={{ background: "#fff", border: `1px solid ${COLORS.ink200}`, borderRadius: 12, overflow: "hidden" }}>
+              <div className="manager-reports-table__scroll" style={{ overflowX: "auto" }}>
+                <table className="manager-reports-table__table" style={{ width: "100%", borderCollapse: "collapse", fontSize: 11.5 }}>
                   <thead>
                     <tr style={{ background: COLORS.ink100 }}>
                       {["Photo", "Report Title", "Category", "Assigned To", "Status", "Priority"].map((h) => (
@@ -733,20 +735,31 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
                         const cat = categoryMeta(r.categoryName);
                         const CatIcon = cat.icon;
                         return (
-                          <tr key={r.id} onClick={() => setViewing(r.id)} style={{ borderTop: `1px solid ${COLORS.ink100}`, cursor: "pointer" }}>
-                            <td style={{ padding: "9px 12px" }}>
-                              <PhotoThumb src={r.photoUrl} color={cat.color} />
+                          <tr className="manager-reports-table__report-row" key={r.id} onClick={() => setViewing(r.id)} style={{ borderTop: `1px solid ${COLORS.ink100}`, cursor: "pointer" }}>
+                            <td className="manager-reports-table__photo" style={{ padding: "9px 12px" }}>
+                              <PhotoThumb src={r.photoUrl} color={cat.color} size={48} radius={10} />
                             </td>
-                            <td style={{ padding: "9px 12px", maxWidth: 200 }}>
-                              <div style={{ fontWeight: 700, color: COLORS.ink900 }}>{r.title}</div>
-                              <div style={{ fontSize: 10.5, color: COLORS.ink500 }}>{r.location || "No location"}</div>
+                            <td className="manager-reports-table__title" style={{ padding: "9px 12px", maxWidth: 200 }}>
+                              <div className="manager-reports-table__title-text" style={{ fontWeight: 700, color: COLORS.ink900 }}>{r.title}</div>
+                              <div className="manager-reports-table__location" style={{ fontSize: 10.5, color: COLORS.ink500 }}>{r.location || "No location"}</div>
+                              <button
+                                type="button"
+                                className="manager-reports-table__view"
+                                onClick={(event) => {
+                                  event.stopPropagation();
+                                  setViewing(r.id);
+                                }}
+                              >
+                                <Eye size={14} aria-hidden="true" />
+                                View details
+                              </button>
                             </td>
-                            <td style={{ padding: "9px 12px", whiteSpace: "nowrap" }}>
+                            <td className="manager-reports-table__desktop" style={{ padding: "9px 12px", whiteSpace: "nowrap" }}>
                               <div style={{ display: "flex", alignItems: "center", gap: 5, color: cat.color, fontWeight: 600, fontSize: 11.5 }}>
                                 {CatIcon && <CatIcon size={12} />} {r.categoryName}
                               </div>
                             </td>
-                            <td style={{ padding: "9px 12px", whiteSpace: "nowrap" }}>
+                            <td className="manager-reports-table__desktop" style={{ padding: "9px 12px", whiteSpace: "nowrap" }}>
                               {r.assignee.label ? (
                                 <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11.5, color: COLORS.ink700 }}>
                                   {r.assignee.type === "group" ? <Users size={13} color={COLORS.ink500} /> : <User size={13} color={COLORS.ink500} />}
@@ -756,10 +769,10 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
                                 <span style={{ fontSize: 11.5, color: COLORS.ink300 }}>Unassigned</span>
                               )}
                             </td>
-                            <td style={{ padding: "9px 12px" }}>
+                            <td className="manager-reports-table__desktop" style={{ padding: "9px 12px" }}>
                               <Pill bg={st.bg} fg={st.fg}>{st.label}</Pill>
                             </td>
-                            <td style={{ padding: "9px 12px" }}>
+                            <td className="manager-reports-table__desktop" style={{ padding: "9px 12px" }}>
                               <Pill bg={pr.bg} fg={pr.fg}>{pr.label}</Pill>
                             </td>
                           </tr>

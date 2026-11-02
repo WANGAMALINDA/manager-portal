@@ -1,0 +1,112 @@
+.manager-reports-table__view {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .manager-reports-table {
+    overflow: visible !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  .manager-reports-table__scroll {
+    overflow: visible !important;
+  }
+
+  .manager-reports-table__table,
+  .manager-reports-table__table tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .manager-reports-table__table {
+    min-width: 0 !important;
+  }
+
+  .manager-reports-table__table thead {
+    display: none;
+  }
+
+  .manager-reports-table__table tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  .manager-reports-table__report-row {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    align-items: center;
+    gap: 0 12px;
+    padding: 12px;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(16, 24, 40, 0.04);
+    cursor: default !important;
+  }
+
+  .manager-reports-table__report-row:hover {
+    background: #fff;
+  }
+
+  .manager-reports-table__report-row > td {
+    display: block;
+    width: auto;
+    padding: 0 !important;
+    border: 0;
+  }
+
+  .manager-reports-table__report-row > .manager-reports-table__photo {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .manager-reports-table__photo img,
+  .manager-reports-table__photo > div {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 10px !important;
+  }
+
+  .manager-reports-table__report-row > .manager-reports-table__title {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    max-width: none !important;
+  }
+
+  .manager-reports-table__title-text {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .manager-reports-table__location,
+  .manager-reports-table__desktop {
+    display: none !important;
+  }
+
+  .manager-reports-table__view {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 6px 9px;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    background: #f0fdf4;
+    color: #166534;
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .manager-reports-table__view:hover {
+    border-color: #16a34a;
+    background: #dcfce7;
+  }
+}
