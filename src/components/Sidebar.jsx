@@ -30,11 +30,11 @@ import {
 import { roleLabel } from "../utils/managerAccess";
 
 const navItems = [
+  { key: "profile", label: "Profile", icon: User },
   { key: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { key: "reports", label: "Reports", icon: FolderOpen },
   { key: "assignments", label: "Assignments", icon: ClipboardList },
   { key: "analysis", label: "Analysis", icon: BarChart3 },
-  { key: "profile", label: "Profile", icon: User },
 ];
 
 const ALL_ISSUES_ITEM = { key: "all", label: "All Issues", icon: FolderOpen, color: "#111827" };
