@@ -136,8 +136,8 @@ export default function AdminLocations() {
     location: "",
     category_id: "",
     severity: "Low",
-    latitude: String(MAP_CENTER[0]),
-    longitude: String(MAP_CENTER[1]),
+    latitude: "",
+    longitude: "",
   });
   const [saving, setSaving] = useState(false);
   const [notification, setNotification] = useState("");
@@ -302,8 +302,8 @@ export default function AdminLocations() {
       location: "",
       category_id: categories[0]?.id || "",
       severity: "Low",
-      latitude: String(MAP_CENTER[0]),
-      longitude: String(MAP_CENTER[1]),
+      latitude: "",
+      longitude: "",
     });
   };
 
