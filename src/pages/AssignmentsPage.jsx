@@ -25,16 +25,7 @@ import {
   UploadCloud
 } from "lucide-react";
 
-/* ------------------------------------------------------------------ */
-/* Assignable staff: fetched from `profiles` where role = 'staff'.    */
-/* Reports store the assignee's profile UUID in `assigned_to` (text), */
-/* matching how Dashboard/Profile look up "assigned to me" work.      */
-/* The staff picker displays names but the value saved is the id.     */
-/* ------------------------------------------------------------------ */
 
-/* ------------------------------------------------------------------ */
-/* Design tokens                                                       */
-/* ------------------------------------------------------------------ */
 const COLORS = {
   green900: "#064E3B",
   green700: "#15803D",
@@ -73,9 +64,7 @@ function deriveTitle(title, categoryName) {
   return title || categoryName || "Untitled report";
 }
 
-// `r.assigned_to` stores the assigned staff member's profile UUID (matches
-// what Dashboard/Profile query against). The human-readable name is resolved
-// separately via a staffNameById lookup, since the id alone isn't friendly to display.
+
 function assigneeInfo(r) {
   if (r.assigned_to) {
     return { type: "assigned", id: r.assigned_to };
@@ -266,23 +255,25 @@ function StatusStepper({ status, busy, onChange, compact }) {
   );
 }
 
-function AssignmentCard({ a, removing, busy, onView, onStageChange, onReject, staffNameById }) {
+function AssignmentCard({ a, selected, removing, busy, onSelect, onView, onStageChange, onReject, staffNameById }) {
   const stale = isStale(a);
   const priorityStyle = PRIORITY_PILL[a.severity] || PRIORITY_PILL.Low;
   const assigneeName = resolveAssigneeName(a.assignee, staffNameById);
 
   return (
     <div
+      onClick={() => onSelect(a.id)}
       style={{
         background: "#fff",
-        border: a.isTopVoted ? `1px solid ${COLORS.red500}` : `1px solid ${COLORS.ink200}`,
+        border: selected ? `1px solid ${COLORS.orange500}` : `1px solid ${COLORS.ink200}`,
         borderRadius: 13,
         boxShadow: "0 1px 2px rgba(17,24,39,0.04), 0 8px 24px -12px rgba(17,24,39,0.10)",
         padding: 14,
         display: "flex",
         flexDirection: "column",
         gap: 9,
-        transition: "transform .18s ease, box-shadow .18s ease, opacity .26s ease",
+        cursor: "pointer",
+        transition: "border-color .18s ease, transform .18s ease, box-shadow .18s ease, opacity .26s ease",
         opacity: removing ? 0 : 1,
         transform: removing ? "translateX(40px) scale(.96)" : "none",
       }}
@@ -939,6 +930,7 @@ function EmptyState({ title, text }) {
 
 export default function AssignmentsPage() {
   const [assignments, setAssignments] = useState([]);
+  const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [busyId, setBusyId] = useState(null);
@@ -1457,13 +1449,15 @@ export default function AssignmentsPage() {
       ) : filtered.length === 0 ? (
         <EmptyState title="No matching assignments" text="Try a different search term or filter." />
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))", gap: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(270px, 1fr))", gridAutoRows: "max-content", gap: 12, maxHeight: "900px", overflowY: "auto", padding: "1px 4px 1px 1px" }}>
           {filtered.map((a) => (
             <AssignmentCard
               key={a.id}
               a={a}
+              selected={selectedAssignmentId === a.id}
               removing={removingId === a.id}
               busy={busyId === a.id}
+              onSelect={setSelectedAssignmentId}
               onView={setViewId}
               onStageChange={handleStageChange}
               onReject={setRejectId}
