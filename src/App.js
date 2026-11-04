@@ -90,7 +90,12 @@ function ManagerRoute() {
   }, [navigate]);
 
   if (checkingAccess) {
-    return <main aria-live="polite" style={{ padding: 32, textAlign: "center" }}>Verifying manager access...</main>;
+    return (
+      <main className="manager-app-loading" aria-live="polite">
+        <div className="manager-app-loading__spinner" aria-hidden="true" />
+        <p>Verifying manager access…</p>
+      </main>
+    );
   }
 
   return <Dashboard />;
