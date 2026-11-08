@@ -23,6 +23,7 @@ import {
   Trees,
   CircleHelp,
   Menu,
+  RefreshCw,
   X,
   LogOut,
   Headphones,
@@ -279,6 +280,24 @@ export default function Sidebar({
         )}
 
         <div style={{ flex: 1 }} />
+
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          aria-label="Refresh portal"
+          title="Refresh portal"
+          style={{
+            padding: 6,
+            color: "#6b7280",
+            background: "none",
+            border: "none",
+            borderRadius: 6,
+            cursor: "pointer",
+            flexShrink: 0,
+          }}
+        >
+          <RefreshCw size={18} />
+        </button>
 
         {isMobile && (
           <button
