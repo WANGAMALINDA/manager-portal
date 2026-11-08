@@ -515,7 +515,7 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
   }
 
   const filtered = useMemo(() => {
-    return reports.filter((r) => {
+    const result = reports.filter((r) => {
       if (category !== "all") {
         const matchesId = r.category_id === category;
         const matchesName = r.categoryName?.toLowerCase() === category.toLowerCase();
@@ -533,6 +533,9 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
       }
       return true;
     });
+    return status === "high"
+      ? result.sort((a, b) => (b.votes || 0) - (a.votes || 0))
+      : result;
   }, [reports, search, category, status]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));

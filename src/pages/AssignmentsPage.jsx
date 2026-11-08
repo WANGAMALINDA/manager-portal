@@ -1356,7 +1356,7 @@ export default function AssignmentsPage() {
   }
 
   const filtered = useMemo(() => {
-    return assignments.filter((a) => {
+    const result = assignments.filter((a) => {
       const matchesFilter =
         filter === "all" ? true :
         filter === "under_review" ? a.status === "under_review" :
@@ -1373,6 +1373,9 @@ export default function AssignmentsPage() {
         (a.location || "").toLowerCase().includes(t)
       );
     });
+    return filter === "high"
+      ? result.sort((a, b) => (b.votes || 0) - (a.votes || 0))
+      : result;
   }, [assignments, filter, search]);
 
   const viewedAssignment = assignments.find((a) => a.id === viewId) || null;
