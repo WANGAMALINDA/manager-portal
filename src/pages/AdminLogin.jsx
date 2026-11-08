@@ -26,22 +26,6 @@ function AdminLogin() {
   const [authError, setAuthError] = useState(location.state?.authError || "");
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [resetMessage, setResetMessage] = useState("");
-
-  const handleForgotPassword = async () => {
-    setAuthError("");
-    setResetMessage("");
-    if (!form.identifier.trim()) {
-      setAuthError("Enter your manager email first to reset your password.");
-      return;
-    }
-    const { error } = await supabase.auth.resetPasswordForEmail(form.identifier.trim());
-    if (error) {
-      setAuthError("We couldn't send a reset email. Please contact your administrator.");
-      return;
-    }
-    setResetMessage("Password reset instructions sent.");
-  };
 
   const validate = () => {
     const nextErrors = {};
@@ -172,7 +156,6 @@ function AdminLogin() {
                 aria-describedby={errors.password ? "password-error" : undefined}
                 autoComplete="current-password"
               />
-              <button type="button" className="manager-login__forgot" onClick={handleForgotPassword}>Forgot password?</button>
               <button type="button" className="manager-login__password-toggle" onClick={() => setShowPassword((current) => !current)} aria-label={showPassword ? "Hide password" : "Show password"}>
                 {showPassword ? "Hide" : "Show"}
               </button>
@@ -183,7 +166,6 @@ function AdminLogin() {
               </span>
             )}
           </div>
-          {resetMessage && <span className="manager-login__reset-message" role="status">{resetMessage}</span>}
 
           <button className="manager-login__submit" type="submit" disabled={submitting}>
             {submitting ? (

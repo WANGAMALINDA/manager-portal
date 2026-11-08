@@ -186,31 +186,6 @@
   font-weight: 600;
 }
 
-.manager-login__forgot {
-  position: absolute;
-  top: 50%;
-  right: 48px;
-  padding: 6px 4px;
-  transform: translateY(-50%);
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--login-primary);
-  cursor: pointer;
-  font: inherit;
-  font-size: 0.72rem;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.manager-login__forgot:hover {
-  text-decoration: underline;
-}
-
-.manager-login__reset-message {
-  color: var(--login-primary);
-  font-size: 0.78rem;
-}
 
 .manager-login__password-toggle:hover {
   color: var(--login-primary);
