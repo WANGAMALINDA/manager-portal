@@ -5,7 +5,6 @@ import {
   Clock3,
   CheckCircle2,
   TrendingUp,
-  ChevronDown,
   Droplet,
   TriangleAlert,
   Zap,
@@ -14,6 +13,7 @@ import {
   Download,
 } from "lucide-react";
 import { supabase } from "../components/supabaseClient";
+import DropdownSelect from "../components/DropdownSelect";
 
 /* ------------------------------------------------------------------ */
 /* Design tokens — matches Reports/Assignments pages                    */
@@ -72,16 +72,12 @@ function fmtSigned(value, suffix = "%") {
 /* ------------------------------------------------------------------ */
 function Select({ value, onChange, options }) {
   return (
-    <div style={{ position: "relative" }}>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        style={{ appearance: "none", WebkitAppearance: "none", background: "#fff", border: `1px solid ${COLORS.ink200}`, borderRadius: 8, padding: "6px 26px 6px 11px", fontSize: 12, fontWeight: 500, color: COLORS.ink700, cursor: "pointer", fontFamily: "inherit" }}
-      >
-        {options.map((o) => <option key={o} value={o}>{o}</option>)}
-      </select>
-      <ChevronDown size={12} color={COLORS.ink500} style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
-    </div>
+    <DropdownSelect
+      value={value}
+      onChange={onChange}
+      options={options.map((option) => ({ value: option, label: option }))}
+      style={{ minWidth: 140 }}
+    />
   );
 }
 

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { supabase } from "../components/supabaseClient";
 import Footer from "../components/footer";
+import DropdownSelect from "../components/DropdownSelect";
 import {
   Search,
   Filter,
@@ -652,32 +653,30 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
           </div>
 
           {/* Category Filter */}
-          <select
+          <DropdownSelect
             value={category}
-            onChange={(e) => {
-              setCategory(e.target.value);
+            options={[
+              { value: "all", label: "All Categories" },
+              ...categories.map((cat) => ({ value: cat.id, label: cat.category_name })),
+            ]}
+            onChange={(value) => {
+              setCategory(value);
               setPage(1);
-              if (onCategoryChange) onCategoryChange(e.target.value);
+              if (onCategoryChange) onCategoryChange(value);
             }}
-            style={{ padding: "9px 12px", fontSize: 13, borderRadius: 10, border: `1px solid ${COLORS.ink200}`, background: "#fff", color: COLORS.ink700, minWidth: 170 }}
-          >
-            <option value="all">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>{cat.category_name}</option>
-            ))}
-          </select>
+            style={{ minWidth: 170 }}
+          />
 
           {/* Status Filter */}
-          <select
+          <DropdownSelect
             value={status}
-            onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-            style={{ padding: "9px 12px", fontSize: 13, borderRadius: 10, border: `1px solid ${COLORS.ink200}`, background: "#fff", color: COLORS.ink700, minWidth: 160 }}
-          >
-            <option value="all">All Statuses</option>
-            {STATUS_OPTIONS.map((st) => (
-              <option key={st} value={st}>{STATUS_META[st].label}</option>
-            ))}
-          </select>
+            options={[
+              { value: "all", label: "All Statuses" },
+              ...STATUS_OPTIONS.map((st) => ({ value: st, label: STATUS_META[st].label })),
+            ]}
+            onChange={(value) => { setStatus(value); setPage(1); }}
+            style={{ minWidth: 160 }}
+          />
 
           {/* Reset Filters */}
           {(search || category !== "all" || status !== "all") && (
@@ -710,7 +709,7 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
                 <table className="manager-reports-table__table" style={{ width: "100%", borderCollapse: "collapse", fontSize: 11.5 }}>
                   <thead>
                     <tr style={{ background: COLORS.ink100 }}>
-                      {["Photo", "Report Title", "Category", "Assigned To", "Status", "Priority"].map((h) => (
+                      {["Photo", "Report Title", "Category", "Assigned To", "Status", "Priority", "Votes"].map((h) => (
                         <th key={h} style={{ textAlign: "left", padding: "8px 12px", fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".03em", color: COLORS.ink500, whiteSpace: "nowrap" }}>
                           {h}
                         </th>
@@ -720,13 +719,13 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
                   <tbody>
                     {loading ? (
                       <tr>
-                        <td colSpan={6} style={{ padding: "40px 14px", textAlign: "center", color: COLORS.ink500 }}>
+                        <td colSpan={7} style={{ padding: "40px 14px", textAlign: "center", color: COLORS.ink500 }}>
                           <Loader2 size={18} style={{ animation: "spin 1s linear infinite" }} /> Loading…
                         </td>
                       </tr>
                     ) : pageRows.length === 0 ? (
                       <tr>
-                        <td colSpan={6} style={{ padding: "40px 14px", textAlign: "center", color: COLORS.ink500 }}>No reports match your filters.</td>
+                        <td colSpan={7} style={{ padding: "40px 14px", textAlign: "center", color: COLORS.ink500 }}>No reports match your filters.</td>
                       </tr>
                     ) : (
                       pageRows.map((r) => {
@@ -742,6 +741,9 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
                             <td className="manager-reports-table__title" style={{ padding: "9px 12px", maxWidth: 200 }}>
                               <div className="manager-reports-table__title-text" style={{ fontWeight: 700, color: COLORS.ink900 }}>{r.title}</div>
                               <div className="manager-reports-table__location" style={{ fontSize: 10.5, color: COLORS.ink500 }}>{r.location || "No location"}</div>
+                              <div className="manager-reports-table__votes-mobile" style={{ display: "none", alignItems: "center", gap: 4, marginTop: 6, color: COLORS.blue500, fontSize: 11, fontWeight: 700 }}>
+                                <ThumbsUp size={12} /> {r.votes || 0} votes
+                              </div>
                               <button
                                 type="button"
                                 className="manager-reports-table__view"
@@ -774,6 +776,11 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
                             </td>
                             <td className="manager-reports-table__desktop" style={{ padding: "9px 12px" }}>
                               <Pill bg={pr.bg} fg={pr.fg}>{pr.label}</Pill>
+                            </td>
+                            <td className="manager-reports-table__desktop" style={{ padding: "9px 12px", whiteSpace: "nowrap" }}>
+                              <span style={{ display: "inline-flex", alignItems: "center", gap: 5, color: COLORS.blue500, fontWeight: 700 }}>
+                                <ThumbsUp size={13} /> {r.votes || 0}
+                              </span>
                             </td>
                           </tr>
                         );

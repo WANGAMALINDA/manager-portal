@@ -4,6 +4,7 @@ import { divIcon, latLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { MapPin, FileText, Clock, CheckCircle2, AlertTriangle, SlidersHorizontal } from "lucide-react";
 import { supabase } from "../components/supabaseClient";
+import DropdownSelect from "../components/DropdownSelect";
 import "./AdminLocations.css";
 import Footer from "../components/footer"
 
@@ -447,15 +448,21 @@ export default function AdminLocations() {
                     </div>
                     <div className="filter-group">
                       <label htmlFor="map-category">Category</label>
-                      <select id="map-category" value={selectedCategory} onChange={(event) => setSelectedCategory(event.target.value)}>
-                        {categoryOptions.map((option) => <option key={option} value={option}>{option}</option>)}
-                      </select>
+                      <DropdownSelect
+                        value={selectedCategory}
+                        onChange={setSelectedCategory}
+                        options={categoryOptions.map((option) => ({ value: option, label: option }))}
+                        style={{ minWidth: "100%" }}
+                      />
                     </div>
                     <div className="filter-group">
                       <label htmlFor="map-status">Status</label>
-                      <select id="map-status" value={selectedStatus} onChange={(event) => setSelectedStatus(event.target.value)}>
-                        {statusOptions.map((option) => <option key={option} value={option}>{option}</option>)}
-                      </select>
+                      <DropdownSelect
+                        value={selectedStatus}
+                        onChange={setSelectedStatus}
+                        options={statusOptions.map((option) => ({ value: option, label: option }))}
+                        style={{ minWidth: "100%" }}
+                      />
                     </div>
                     <button className="filter-reset-button" onClick={handleResetFilters}>Reset filters</button>
                   </div>
@@ -510,15 +517,21 @@ export default function AdminLocations() {
                 <div className="overview-filters" aria-label="Filter location overview">
                   <label>
                     <span>Category</span>
-                    <select value={selectedCategory} onChange={(event) => setSelectedCategory(event.target.value)}>
-                      {categoryOptions.map((option) => <option key={option} value={option}>{option}</option>)}
-                    </select>
+                    <DropdownSelect
+                      value={selectedCategory}
+                      onChange={setSelectedCategory}
+                      options={categoryOptions.map((option) => ({ value: option, label: option }))}
+                      style={{ minWidth: "100%" }}
+                    />
                   </label>
                   <label>
                     <span>Status</span>
-                    <select value={selectedStatus} onChange={(event) => setSelectedStatus(event.target.value)}>
-                      {statusOptions.map((option) => <option key={option} value={option}>{option}</option>)}
-                    </select>
+                    <DropdownSelect
+                      value={selectedStatus}
+                      onChange={setSelectedStatus}
+                      options={statusOptions.map((option) => ({ value: option, label: option }))}
+                      style={{ minWidth: "100%" }}
+                    />
                   </label>
                 </div>
                 <ProgressDonut segments={donutSegments} total={donutTotal} />
