@@ -355,6 +355,7 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(selectedCategory);
   const [status, setStatus] = useState("all");
+  const [priority, setPriority] = useState("all");
   const [page, setPage] = useState(1);
   const [viewing, setViewing] = useState(null);
 
@@ -522,6 +523,7 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
         if (!matchesId && !matchesName) return false;
       }
       if (status !== "all" && r.status !== status) return false;
+      if (priority === "high" && r.severity !== "High") return false;
       if (search.trim()) {
         const q = search.toLowerCase();
         const hay = `${r.title || ""} ${r.id} ${r.location || ""}`.toLowerCase();
@@ -529,7 +531,7 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
       }
       return true;
     });
-  }, [reports, search, category, status]);
+  }, [reports, search, category, status, priority]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageRows = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -678,14 +680,25 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
             style={{ minWidth: 160 }}
           />
 
+          <DropdownSelect
+            value={priority}
+            options={[
+              { value: "all", label: "All Priorities" },
+              { value: "high", label: "High Priority" },
+            ]}
+            onChange={(value) => { setPriority(value); setPage(1); }}
+            style={{ minWidth: 150 }}
+          />
+
           {/* Reset Filters */}
-          {(search || category !== "all" || status !== "all") && (
+          {(search || category !== "all" || status !== "all" || priority !== "all") && (
             <Btn
               variant="ghost"
               onClick={() => {
                 setSearch("");
                 setCategory("all");
                 setStatus("all");
+                setPriority("all");
                 setPage(1);
                 if (onCategoryChange) onCategoryChange("all");
               }}
@@ -741,9 +754,6 @@ export default function ReportsPage({ selectedCategory = "all", onCategoryChange
                             <td className="manager-reports-table__title" style={{ padding: "9px 12px", maxWidth: 200 }}>
                               <div className="manager-reports-table__title-text" style={{ fontWeight: 700, color: COLORS.ink900 }}>{r.title}</div>
                               <div className="manager-reports-table__location" style={{ fontSize: 10.5, color: COLORS.ink500 }}>{r.location || "No location"}</div>
-                              <div className="manager-reports-table__votes-mobile" style={{ display: "none", alignItems: "center", gap: 4, marginTop: 6, color: COLORS.blue500, fontSize: 11, fontWeight: 700 }}>
-                                <ThumbsUp size={12} /> {r.votes || 0} votes
-                              </div>
                               <button
                                 type="button"
                                 className="manager-reports-table__view"
